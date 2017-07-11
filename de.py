@@ -47,13 +47,14 @@ def purge(dir, patternObjects):
 	for file in os.listdir(dir):
 		if not (patternObjects[0].search(file)) or patternObjects[1].search(file) or patternObjects[2].search(file):
 			try:
-				os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
-				os.remove(os.path.join(dir,file))
+				if not "-p" in sys.argv:
+					os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+					os.remove(os.path.join(dir,file))
 				deleted += 1
 				log += file + " deleted\n"
 			except OSError as e:
 				print("Failed with:", e.strerror)
-	if "-l" in sys.argv:
+	if "-l" in sys.argv or "-p" in sys.argv:
 		file = open("de.log", "w")
 		file.write(log)
 		file.close()
