@@ -8,10 +8,6 @@
 
 import os, re, sys, stat, time
 
-# Additional pattern words can be added to this list. Use escape characters!
-# patterns = ["\(Japan\)", "\(Europe\)", "\(France\)", "\(Italy\)", "\(Germany\)", "\(Spain\)", "\(Korea\)", "\(China\)",
-# "\(Asia\)", "\(Australia\)", "\(Netherlands\)", "\(Sweden\)", "\(Hong Kong\)", "\(Beta\)", "\(Proto\)", "\(Demo\)", "\.7z", "\.zip"]
-
 namePattern = re.compile("(?:\s)*\(.*USA.*\)")
 betaPattern = re.compile(".\(.*(Proto|Beta).*\)")
 zipPattern = re.compile(".*\.(zip|7z)")
@@ -47,9 +43,7 @@ def purge(dir, patternObjects):
 		
 #purgeAll(dir, patterns)
 deleted = purge(dir, patternObjects)
-end_time = time.time() - start_time
+total_time = time.time() - start_time
 
-print("{} files were deleted in {:.2f} seconds.".format(deleted, end_time))
+print("{} files were deleted in {:.2f} seconds.".format(deleted, total_time))
 input("Press enter to exit.")
-
-
