@@ -19,7 +19,6 @@ if "-h" in sys.argv:
 	-h	Show the help menu
 	-t	The target directory to be cleaned
 	-m	Renames outputted files to not contain parenthetical data 
-	-c	Clean the MULTIBOOT directory tree of old runs
 	-l  Logs data to de.log
 	-p  Performs operations and writes to de.log without modifying original data
 	""")
