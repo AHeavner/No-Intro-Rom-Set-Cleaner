@@ -32,7 +32,7 @@ patternObjects = [namePattern, betaPattern, zipPattern]
 
 #Use target argument if specifed otherwise use default
 if "-t" in sys.argv:
-        dir = sys.argv[sys.argv.index("-l") + 1]
+        dir = sys.argv[sys.argv.index("-t") + 1]
 else:
         dir = "E:/Emulators/fgc-nes/roms-c/"
 
