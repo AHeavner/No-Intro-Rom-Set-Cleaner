@@ -5,7 +5,9 @@
 # at the end so do make sure to extract them first.
 # This script is meant to keep USA versions only! If you want to keep different versions then change the "patterns" list.
 
-import os, re, sys, stat, time
+import os, re, sys, stat, time, Open
+
+log = ""
 
 # Show help menu if -h argument is specified
 if "-h" in sys.argv:
@@ -49,9 +51,12 @@ def purge(dir, patternObjects):
 				os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
 				os.remove(os.path.join(dir,file))
 				deleted += 1
+				log += " deleted \n" + file
 			except OSError as e:
 				print("Failed with:", e.strerror)
-				
+	if "-l" in sys.argv:
+		logFile = Open("de.log", "w")
+		print(log, file=)
 	return deleted
 		
 #purgeAll(dir, patterns)
