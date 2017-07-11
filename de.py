@@ -14,8 +14,11 @@ zipPattern = re.compile(".*\.(zip|7z)")
 
 patternObjects = [namePattern, betaPattern, zipPattern]
 
-# This is the directory that will be purged.
-dir = "E:/Emulators/fgc-snes/roms-c/"
+#Use target argument if specifed otherwise use default
+if "-t" in sys.argv:
+        dir = sys.argv[sys.argv.index("-l") + 1]
+else:
+        dir = "F:/Emulators/fgc-snes/roms-c/"
 
 deleted = 0
 start_time = time.time()
