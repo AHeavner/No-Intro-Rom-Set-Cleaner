@@ -3,10 +3,27 @@
 # variable "dir" to the directory that your extracted roms reside. Open a cmd or terminal in the
 # directory that the script exists in and run "python de.py". This script will delete the archives
 # at the end so do make sure to extract them first.
-
 # This script is meant to keep USA versions only! If you want to keep different versions then change the "patterns" list.
 
 import os, re, sys, stat, time
+
+# Show help menu if -h argument is specified
+if "-h" in sys.argv:
+	print("""
+	The purpose of this script is to delete the foreign versions of roms from No Intro rom sets
+	To use it, first extract the files from all of the archives in the rom set. 
+		
+	Usage:
+	python de.py [-t ~/RomSet] [-h] [-r] [-l] [-p] 
+	
+	-h	Show the help menu
+	-t	The target directory to be cleaned
+	-m	Renames outputted files to not contain parenthetical data 
+	-c	Clean the MULTIBOOT directory tree of old runs
+	-l  Logs data to de.log
+	-p  Performs operations and writes to de.log without modifying original data
+	""")
+	quit()
 
 namePattern = re.compile("(?:\s)*\(.*USA.*\)")
 betaPattern = re.compile(".\(.*(Proto|Beta).*\)")
@@ -31,18 +48,12 @@ def purge(dir, patternObjects):
 		if not (patternObjects[0].search(file)) or patternObjects[1].search(file) or patternObjects[2].search(file):
 			try:
 				os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
-				#print(os.path.join(dir,file))
 				os.remove(os.path.join(dir,file))
 				deleted += 1
 			except OSError as e:
 				print("Failed with:", e.strerror)
 				
 	return deleted
-
-# The purgeAll function takes a directory and a list of pattern words to search for.				
-# def purgeAll(dir, patList):
-	# for p in patList:
-		# purge(dir, p)
 		
 #purgeAll(dir, patterns)
 deleted = purge(dir, patternObjects)
