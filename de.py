@@ -5,9 +5,7 @@
 # at the end so do make sure to extract them first.
 # This script is meant to keep USA versions only! If you want to keep different versions then change the "patterns" list.
 
-import os, re, sys, stat, time, Open
-
-log = ""
+import os, re, sys, stat, time
 
 # Show help menu if -h argument is specified
 if "-h" in sys.argv:
@@ -36,7 +34,7 @@ patternObjects = [namePattern, betaPattern, zipPattern]
 if "-t" in sys.argv:
         dir = sys.argv[sys.argv.index("-l") + 1]
 else:
-        dir = "F:/Emulators/fgc-snes/roms-c/"
+        dir = "E:/Emulators/fgc-nes/roms-c/"
 
 deleted = 0
 start_time = time.time()
@@ -45,21 +43,22 @@ start_time = time.time()
 #write permissions of the file and then removes it. An exception is thrown if there is an error.
 def purge(dir, patternObjects):
 	deleted = 0
+	log = ""
 	for file in os.listdir(dir):
 		if not (patternObjects[0].search(file)) or patternObjects[1].search(file) or patternObjects[2].search(file):
 			try:
 				os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
 				os.remove(os.path.join(dir,file))
 				deleted += 1
-				log += " deleted \n" + file
+				log += file + " deleted. \n"
 			except OSError as e:
 				print("Failed with:", e.strerror)
 	if "-l" in sys.argv:
-		logFile = Open("de.log", "w")
-		print(log, file=)
+		file = open("de.log", "w")
+		file.write(log)
+		file.close()
 	return deleted
 		
-#purgeAll(dir, patterns)
 deleted = purge(dir, patternObjects)
 total_time = time.time() - start_time
 
