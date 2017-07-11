@@ -32,7 +32,7 @@ patternObjects = [namePattern, betaPattern, zipPattern]
 
 #Use target argument if specifed otherwise use default
 if "-t" in sys.argv:
-        dir = sys.argv[sys.argv.index("-l") + 1]
+        dir = sys.argv[sys.argv.index("-t") + 1]
 else:
         dir = "E:/Emulators/fgc-nes/roms-c/"
 
@@ -50,7 +50,7 @@ def purge(dir, patternObjects):
 				os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
 				os.remove(os.path.join(dir,file))
 				deleted += 1
-				log += file + " deleted. \n"
+				log += file + " deleted\n"
 			except OSError as e:
 				print("Failed with:", e.strerror)
 	if "-l" in sys.argv:
