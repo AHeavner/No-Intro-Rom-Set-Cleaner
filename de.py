@@ -8,7 +8,7 @@
 
 import os, re, sys, stat, time
 
-namePattern = re.compile("(?:\s)*\(.*USA.*\)")
+namePattern = re.compile("(?:\s)*\(.*(USA|World).*\)")
 betaPattern = re.compile(".\(.*(Proto|Beta).*\)")
 zipPattern = re.compile(".*\.(zip|7z)")
 
