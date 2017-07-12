@@ -18,7 +18,9 @@ patternObjects = [
 	re.compile("(?:\s)*\(.*(USA|World).*\)"), # Script does not delete files that match this regex
 	re.compile("\(.*\)"),                     # Does not delete files that do not have a tag
 	re.compile(".\(.*(Proto|Beta).*\)"),      # Does delete files that are prototypes or betas
-	re.compile(".*\.(zip|7z)")                # Deletes leftover archives
+	re.compile(".*\.(zip|7z)"),               # Deletes leftover archives
+	re.compile("([\w\s\&\-$,!'\.+\~]+)(\(.*\)\s*?)?(\.\w*)"),
+	re.compile("\(Rev [\w\d\s]+\)")
 ]
 
 # Show help menu if -h argument is specified
@@ -85,16 +87,31 @@ def preview(dir):
 	print("{} files in {} would be deleted!".format(deleted, dir))
 	return log
 
-def purgeAndPreview(dir, patternObjects):
+def purgeAndPreview(dir, patternObjects, startTime):
 	log = preview(dir)
 	deleted = 0
 	if(input("Would you like to delete these files? (yes/no):") == "yes"):
 		deleted = purge(dir, patternObjects)
-		message(deleted, getTimeDelta)
+		if "-r" in sys.argv:
+			log = rename(dir, log)
+		message(deleted, getTimeDelta(startTime))
 	logger(log)
+
+def rename(dir, log):
+	for file in os.listdir(dir):
+		matchFull = re.search(patternObjects[4], file)
+		matchRev = re.search(patternObjects[5], file)
+		if matchRev:
+			os.rename(os.path.join(dir, file), os.path.join(dir, matchFull.group(1).strip() + " " + matchRev.group(0) + matchFull.group(3).strip()))
+			log += "Renaming: " + file + " to \n          " + matchFull.group(1).strip() + " " + matchRev.group(0) + matchFull.group(3).strip() + "\n"
+		elif matchFull:
+			os.rename(os.path.join(dir, file), os.path.join(dir, matchFull.group(1).strip() + matchFull.group(3).strip()))
+			log += "Renaming: " + file + " to \n          " + matchFull.group(1).strip() + matchFull.group(3).strip() + "\n"
+		else:
+			log += "Skipping: " + file + "\n"
+	return log
 
 helpMenu()
 dir = setTarget()
-purgeAndPreview(dir, patternObjects)
-
+purgeAndPreview(dir, patternObjects, start_time)
 
