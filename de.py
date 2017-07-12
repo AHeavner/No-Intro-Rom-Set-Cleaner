@@ -83,7 +83,7 @@ def preview(dir):
 	for file in os.listdir(dir):
 		if not (patternObjects[0].search(file)) or not (patternObjects[1].search(file)) or patternObjects[2].search(file) or patternObjects[3].search(file):
 			deleted += 1
-			log += file + " deleted\n"
+			log += "Deleted: " + file + "\n"
 	print("{} files in {} would be deleted!".format(deleted, dir))
 	return log
 
