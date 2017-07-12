@@ -85,16 +85,16 @@ def preview(dir):
 	print("{} files in {} would be deleted!".format(deleted, dir))
 	return log
 
-def purgeAndPreview(dir, patternObjects):
+def purgeAndPreview(dir, patternObjects, startTime):
 	log = preview(dir)
 	deleted = 0
 	if(input("Would you like to delete these files? (yes/no):") == "yes"):
 		deleted = purge(dir, patternObjects)
-		message(deleted, getTimeDelta)
+		message(deleted, getTimeDelta(startTime))
 	logger(log)
 
 helpMenu()
 dir = setTarget()
-purgeAndPreview(dir, patternObjects)
+purgeAndPreview(dir, patternObjects, start_time)
 
 
