@@ -114,4 +114,3 @@ def rename(dir, log):
 helpMenu()
 dir = setTarget()
 purgeAndPreview(dir, patternObjects, start_time)
-
