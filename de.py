@@ -14,18 +14,16 @@ import os, re, sys, stat, time
 deleted = 0
 start_time = time.time()
 
-def reCompiler():
-	namePattern = re.compile("(?:\s)*\(.*(USA|World).*\)")
-	noNamePattern = re.compile("\(.*\)")
-	betaPattern = re.compile(".\(.*(Proto|Beta).*\)")
-	zipPattern = re.compile(".*\.(zip|7z)")
-
-	patternObjects = [namePattern, noNamePattern, betaPattern, zipPattern]
-	return patternObjects
+patternObjects = [
+	re.compile("(?:\s)*\(.*(USA|World).*\)"), # Script does not delete files that match this regex
+	re.compile("\(.*\)"),                     # Does not delete files that do not have a tag
+	re.compile(".\(.*(Proto|Beta).*\)"),      # Does delete files that are prototypes or betas
+	re.compile(".*\.(zip|7z)")                # Deletes leftover archives
+]
 
 # Show help menu if -h argument is specified
-def helpMenu(args):
-	if "-h" in args:
+def helpMenu():
+	if "-h" in sys.argv:
 		print("""
 		The purpose of this script is to delete the foreign versions of roms from No Intro rom sets
 		To use it, first extract the files from all of the archives in the rom set. 
@@ -37,30 +35,28 @@ def helpMenu(args):
 		-t  The target directory to be cleaned
 		-m  Renames outputted files to not contain parenthetical data 
 		-l  Logs data to de.log
-		-p  Performs operations and writes to de.log without modifying original data
 		""")
 
-#Use target argument if specifed otherwise use default
-def setTarget(args):
-	if "-t" in args:
-			dir = args[args.index("-t") + 1]
+# Use target argument if specifed otherwise use default
+def setTarget():
+	if "-t" in sys.argv:
+			dir = sys.argv[sys.argv.index("-t") + 1]
 	else:
-			dir = "E:/Emulators/fgc-snes/roms-c/"
+			dir = "E:/Emulators/fgc-nes/roms-c/"
+	return dir
 
-def logger(args, log):
-	if "-l" in args or "-p" in args:
+# Writes deletion log to de.log file
+def logger(log):
+	if "-l" in sys.argv or "-p" in sys.argv:
 		logFile = open("de.log", "w")
 		logFile.write(log)
 		logFile.close()
+# Displays a message about files deleted and time taken
+def message(numDeleted, totalTime):
+	print("{} files were deleted in {:.2f} seconds.".format(numDeleted, totalTime))
+	input("Press enter to exit.")
 
-def message(numDeleted, directory, totaltime):
-	if "-p" in sys.argv:
-		print("{} files in {} would be deleted!".format(numDeleted, directory))
-		input("Press enter to exit.")
-	else:
-		print("{} files were deleted in {:.2f} seconds.".format(deleted, totaltime))
-		input("Press enter to exit.")
-
+# Calculates the time delta between the startTime argument and call of this function
 def getTimeDelta(startTime):
 	return time.time() - startTime
 
@@ -72,21 +68,33 @@ def purge(dir, patternObjects):
 	for file in os.listdir(dir):
 		if not (patternObjects[0].search(file)) or not (patternObjects[1].search(file)) or patternObjects[2].search(file) or patternObjects[3].search(file):
 			try:
-				if not "-p" in sys.argv:
-					os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
-					os.remove(os.path.join(dir,file))
+				os.chmod(os.path.join(dir,file), stat.S_IWRITE | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+				os.remove(os.path.join(dir,file))
 				deleted += 1
-				log += file + " deleted\n"
 			except OSError as e:
 				print("Failed with:", e.strerror)
-
-	logger(sys.argv, log)
 	return deleted
 
-patternObjects = reCompiler()
-helpMenu(sys.argv)
-setTarget(sys.argv)
-deleted = purge(dir, patternObjects)
-total_time = getTimeDelta(start_time)
-message(deleted, dir, total_time)
+def preview(dir):
+	deleted = 0
+	log = ""
+	for file in os.listdir(dir):
+		if not (patternObjects[0].search(file)) or not (patternObjects[1].search(file)) or patternObjects[2].search(file) or patternObjects[3].search(file):
+			deleted += 1
+			log += file + " deleted\n"
+	print("{} files in {} would be deleted!".format(deleted, dir))
+	return log
+
+def purgeAndPreview(dir, patternObjects):
+	log = preview(dir)
+	deleted = 0
+	if(input("Would you like to delete these files? (yes/no):") == "yes"):
+		deleted = purge(dir, patternObjects)
+		message(deleted, getTimeDelta)
+	logger(log)
+
+helpMenu()
+dir = setTarget()
+purgeAndPreview(dir, patternObjects)
+
 
