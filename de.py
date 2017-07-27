@@ -30,11 +30,11 @@ def helpMenu():
 		To use it, first extract the files from all of the archives in the rom set. 
 			
 		Usage:
-		python de.py [-t ~/RomSet] [-h] [-r] [-l] [-p] 
+		python de.py [-t ~/RomSet] [-h] [-r] [-l]
 		
 		-h  Show the help menu
 		-t  The target directory to be cleaned
-		-m  Renames outputted files to not contain parenthetical data 
+		-r  Renames outputted files to not contain parenthetical data 
 		-l  Logs data to de.log
 		""")
 	exit()
