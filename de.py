@@ -37,6 +37,7 @@ def helpMenu():
 		-m  Renames outputted files to not contain parenthetical data 
 		-l  Logs data to de.log
 		""")
+	exit()
 
 # Use target argument if specifed otherwise use default
 def setTarget():
